@@ -5,20 +5,8 @@ using UnityEngine;
 
 public class Hero : MonoBehaviour
 {
-    private static Hero _instance;
+    public static Hero Instance { get; }
 
-    public static Hero Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = gameObject.AddComponent<Hero>();
-            }
-
-            return _instance;
-        }
-    }
     // Start is called before the first frame update
     void Start()
     {
