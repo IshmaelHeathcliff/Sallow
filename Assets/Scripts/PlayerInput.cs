@@ -13,6 +13,7 @@ public class PlayerInput : MonoBehaviour
     public InputButton pause = new InputButton(KeyCode.Escape);
     public InputButton confirm = new InputButton(KeyCode.Return);
     public InputButton attack = new InputButton(KeyCode.A);
+    public InputButton attackWithWeapon = new InputButton(KeyCode.S);
 
     private void Awake()
     {
@@ -28,5 +29,6 @@ public class PlayerInput : MonoBehaviour
         pause.Get();
         confirm.Get();
         attack.Get();
+        attackWithWeapon.Get();
     }
 }
