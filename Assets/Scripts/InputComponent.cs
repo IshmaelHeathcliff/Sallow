@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class InputComponent
 {
-    private bool _enabled = true;
-    public bool Enabled
-    {
-        get { return _enabled; }
-    }
+    public bool Enabled { get; } = true;
 
     public abstract void Get();
 }
+
+// [Serializable]
 public class InputButton : InputComponent
 {
     public KeyCode Key;
@@ -33,6 +28,7 @@ public class InputButton : InputComponent
     }
 }
 
+// [Serializable]
 public class InputAxis : InputComponent
 {
     public float Horizontal;

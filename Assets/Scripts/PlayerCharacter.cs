@@ -1,43 +1,45 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class PlayerCharacter : MonoBehaviour
 {
     public static PlayerCharacter Instance { get; private set; }
-    
     public float maxSpeed = 4f;
     public float acceleration = 3f;
-
-    private Vector2 _movement;
+    public float attackInterval;
     
-    private Animator _animator;
-    private Rigidbody2D _rigidbody;
-    private PlayerController _playerController;
+    float _nextAttackTime;
+    Vector2 _movement;
+    Animator _animator;
+    Rigidbody2D _rigidbody;
+    CharacterController2D _characterController;
+    DamageTrigger _attackDamageTrigger;
 
-    private static readonly int FaceDirectionX = Animator.StringToHash("faceDirectionX");
-    private static readonly int FaceDirectionY = Animator.StringToHash("faceDirectionY");
-    private static readonly int WalkDirectionX = Animator.StringToHash("walkDirectionX");
-    private static readonly int WalkDirectionY = Animator.StringToHash("walkDirectionY");
-    
-    private void Awake()
+    static readonly int FaceDirectionX = Animator.StringToHash("faceDirectionX");
+    static readonly int FaceDirectionY = Animator.StringToHash("faceDirectionY");
+    static readonly int WalkDirectionX = Animator.StringToHash("walkDirectionX");
+    static readonly int WalkDirectionY = Animator.StringToHash("walkDirectionY");
+    static readonly int AttackTrigger = Animator.StringToHash("attack");
+    static readonly int AttackWithWeapon = Animator.StringToHash("attackWithWeapon");
+
+    void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        
         _animator = GetComponent<Animator>();
-        _playerController = GetComponent<PlayerController>();
+        _characterController = GetComponent<CharacterController2D>();
+        _attackDamageTrigger = GetComponent<DamageTrigger>();
+        _nextAttackTime = Time.time;
+        
+        AttackSMB.Initialise(_animator, this);
     }
 
 
-    private void Walk()
+    void Walk()
     {
         float horizontal = PlayerInput.Instance.moveController.Horizontal;
         float vertical = PlayerInput.Instance.moveController.Vertical;
+        
+        // 控制斜向速度与直向速度相同
         float offset = 1f;
         if (2f - Math.Abs(horizontal) - Math.Abs(vertical) < 0.1f)
         {
@@ -45,7 +47,8 @@ public class PlayerCharacter : MonoBehaviour
         }
         var moveDirection = new Vector2(horizontal, vertical) * offset;
 
-        if (_playerController.velocity < maxSpeed)
+        // 计算移动量并移动
+        if (_characterController.velocity < maxSpeed)
         {
             _movement = Vector2.MoveTowards(_movement, moveDirection*maxSpeed, Time.deltaTime * acceleration );
         }
@@ -53,32 +56,61 @@ public class PlayerCharacter : MonoBehaviour
         {
             _movement = maxSpeed * Time.deltaTime * moveDirection;
         }
-        _playerController.Move(_movement);
+        _characterController.Move(_movement);
         
+        // 动画控制
+        _animator.SetFloat(WalkDirectionX, horizontal);
+        _animator.SetFloat(WalkDirectionY, vertical);
         if (PlayerInput.Instance.moveController.Moving)
         {
-            _animator.SetFloat(WalkDirectionX, horizontal);
-            _animator.SetFloat(WalkDirectionY, vertical);
-            _animator.SetFloat(FaceDirectionX, horizontal);
-            _animator.SetFloat(FaceDirectionY, vertical);
+            if (Mathf.Abs(vertical) > 0)
+            {
+                _animator.SetFloat(FaceDirectionX, 0f);
+                _animator.SetFloat(FaceDirectionY, vertical);
+            }
+            else
+            {
+                _animator.SetFloat(FaceDirectionX, horizontal);
+                _animator.SetFloat(FaceDirectionY, 0f);
+            }
         }
-        else
-        {
-            _animator.SetFloat(WalkDirectionX, 0f);
-            _animator.SetFloat(WalkDirectionY, 0f);
-        }
-
     }
 
-    private void Attack()
+    void Attack()
     {
-        throw new NotImplementedException();
+        if (PlayerInput.Instance.attack.Held)
+        {
+            if (Time.time > _nextAttackTime)
+            {
+                _animator.SetTrigger(AttackTrigger);
+                _nextAttackTime = Time.time + attackInterval;
+            }
+        }
+        else if (PlayerInput.Instance.attackWithWeapon.Held)
+        {
+            if (Time.time > _nextAttackTime)
+            {
+                _animator.SetTrigger(AttackWithWeapon);
+                _nextAttackTime = Time.time + attackInterval;
+            }
+        }
+    }
+
+    public void EnableAttack()
+    {
+        _attackDamageTrigger.EnableDamage();
+    }
+
+    public void DisableAttack()
+    {
+        _attackDamageTrigger.DisableDamage();
     }
 
     // Update is called once per frame
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         Walk();
+        Attack();
         
     }
 }

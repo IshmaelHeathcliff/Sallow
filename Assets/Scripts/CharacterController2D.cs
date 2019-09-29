@@ -1,17 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class CharacterController2D : MonoBehaviour
 {
     public float velocity;
 
-    private BoxCollider2D _boxCollider;
-    private Rigidbody2D _rigidbody;
-    private Vector2 _movement;
-    private void Awake()
+    Rigidbody2D _rigidbody;
+    Vector2 _movement;
+
+    void Awake()
     {
-        _boxCollider = GetComponent<BoxCollider2D>();
         _rigidbody = GetComponent<Rigidbody2D>();
     }
 
@@ -19,8 +16,8 @@ public class PlayerController : MonoBehaviour
     {
         _movement += movement;
     }
-    
-    private void Update()
+
+    void Update()
     {
         Vector2 oldPosition = _rigidbody.position;
         Vector2 newPosition = oldPosition + _movement;
