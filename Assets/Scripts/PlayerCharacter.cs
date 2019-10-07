@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -8,6 +9,8 @@ public class PlayerCharacter : MonoBehaviour
     public float maxSpeed = 4f;
     public float acceleration = 3f;
     public float attackInterval;
+    public float arrowOffset;
+    public GameObject arrow;
     
     float _nextAttackTime;
     Vector2 _movement;
@@ -21,43 +24,34 @@ public class PlayerCharacter : MonoBehaviour
     static readonly int WalkDirectionX = Animator.StringToHash("walkDirectionX");
     static readonly int WalkDirectionY = Animator.StringToHash("walkDirectionY");
     static readonly int AttackTrigger = Animator.StringToHash("attack");
-    static readonly int AttackWithWeapon = Animator.StringToHash("attackWithWeapon");
+    static readonly int AttackWithWeaponTrigger = Animator.StringToHash("attackWithWeapon");
 
     void Awake()
     {
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController2D>();
         _attackDamageTrigger = GetComponent<DamageTrigger>();
-        _nextAttackTime = Time.time;
-        
-        AttackSMB.Initialise(_animator, this);
     }
 
+    void Start()
+    {
+        _nextAttackTime = Time.time;
+        _characterController.FaceDirection = new Vector2(0,-1);
+        SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
+    }
+
+    void FixedUpdate()
+    {
+        Walk();
+        Attack();
+        
+    }
 
     void Walk()
     {
         float horizontal = PlayerInput.Instance.moveController.Horizontal;
         float vertical = PlayerInput.Instance.moveController.Vertical;
-        
-        // 控制斜向速度与直向速度相同
-        float offset = 1f;
-        if (2f - Math.Abs(horizontal) - Math.Abs(vertical) < 0.1f)
-        {
-            offset = 0.7071f;
-        }
-        var moveDirection = new Vector2(horizontal, vertical) * offset;
 
-        // 计算移动量并移动
-        if (_characterController.velocity < maxSpeed)
-        {
-            _movement = Vector2.MoveTowards(_movement, moveDirection*maxSpeed, Time.deltaTime * acceleration );
-        }
-        if (_movement.magnitude > maxSpeed * Time.deltaTime)
-        {
-            _movement = maxSpeed * Time.deltaTime * moveDirection;
-        }
-        _characterController.Move(_movement);
-        
         // 动画控制
         _animator.SetFloat(WalkDirectionX, horizontal);
         _animator.SetFloat(WalkDirectionY, vertical);
@@ -67,13 +61,34 @@ public class PlayerCharacter : MonoBehaviour
             {
                 _animator.SetFloat(FaceDirectionX, 0f);
                 _animator.SetFloat(FaceDirectionY, vertical);
+                _characterController.FaceDirection = new Vector2(0, vertical);
             }
             else
             {
                 _animator.SetFloat(FaceDirectionX, horizontal);
                 _animator.SetFloat(FaceDirectionY, 0f);
+                _characterController.FaceDirection = new Vector2(horizontal, 0);
             }
         }
+        
+        // 控制斜向速度与直向速度相同
+        var speedOffset = 1f;
+        if (2f - Math.Abs(horizontal) - Math.Abs(vertical) < 0.1f)
+        {
+            speedOffset = 0.7071f;
+        }
+        Vector2 moveDirection = new Vector2(horizontal, vertical) * speedOffset;
+        
+        // 计算移动量并移动
+        if (_characterController.velocity < maxSpeed)
+        {
+            _movement = Vector2.MoveTowards(_movement, moveDirection*maxSpeed, Time.fixedDeltaTime * acceleration );
+        }
+        if (_movement.magnitude > maxSpeed * Time.fixedDeltaTime)
+        {
+            _movement = maxSpeed * Time.fixedDeltaTime * moveDirection;
+        }
+        _characterController.Move(_movement);
     }
 
     void Attack()
@@ -90,10 +105,37 @@ public class PlayerCharacter : MonoBehaviour
         {
             if (Time.time > _nextAttackTime)
             {
-                _animator.SetTrigger(AttackWithWeapon);
+                _animator.SetTrigger(AttackWithWeaponTrigger);
                 _nextAttackTime = Time.time + attackInterval;
             }
         }
+    }
+
+    public void ShootArrow()
+    {
+        Vector3 arrowPosition = transform.position + (Vector3)_characterController.FaceDirection * arrowOffset;
+        float arrowRotation;
+        switch (_characterController.FaceDirection.x * 10 + _characterController.FaceDirection.y)
+        {
+            case 1f: 
+                arrowRotation = 0f;
+                break;
+            case -1f: 
+                arrowRotation = 180f;
+                break;
+            case 10f:
+                arrowRotation = 270f;
+                break;
+            case -10f:
+                arrowRotation = 90f;
+                break;
+            default:
+                arrowRotation = 0f;
+                break;
+        }
+
+        Quaternion arrowInstanceQuaternion = Quaternion.Euler(new Vector3(0, 0, arrowRotation));
+        Instantiate(arrow, arrowPosition, arrowInstanceQuaternion);
     }
 
     public void EnableAttack()
@@ -105,12 +147,5 @@ public class PlayerCharacter : MonoBehaviour
     {
         _attackDamageTrigger.DisableDamage();
     }
-
     // Update is called once per frame
-    void FixedUpdate()
-    {
-        Walk();
-        Attack();
-        
-    }
 }

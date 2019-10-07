@@ -7,8 +7,8 @@ public class PlayerInput : MonoBehaviour
     public InputAxis moveController = new InputAxis();
     public InputButton pause = new InputButton(KeyCode.Escape);
     public InputButton confirm = new InputButton(KeyCode.Return);
-    public InputButton attack = new InputButton(KeyCode.LeftControl);
-    public InputButton attackWithWeapon = new InputButton(KeyCode.LeftAlt);
+    public InputButton attack = new InputButton(KeyCode.Z);
+    public InputButton attackWithWeapon = new InputButton(KeyCode.X);
 
     void Awake()
     {

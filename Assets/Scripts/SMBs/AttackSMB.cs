@@ -1,28 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class AttackSMB : StateMachineBehaviour
+public class AttackSMB : SceneLinkedSMB<PlayerCharacter>
 {
-    PlayerCharacter _playerCharacter;
-
-    public static void Initialise(Animator animator, PlayerCharacter playerCharacter)
-    {
-        AttackSMB[] attackSMBs = animator.GetBehaviours<AttackSMB>();
-        foreach (AttackSMB attackSMB in attackSMBs)
-        {
-            attackSMB.InternalInitialise(playerCharacter);
-        }
-    }
-
-    public void InternalInitialise(PlayerCharacter playerCharacter)
-    {
-        _playerCharacter = playerCharacter;
-    }
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _playerCharacter.EnableAttack();
+        _monoBehaviour.EnableAttack();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -34,7 +17,7 @@ public class AttackSMB : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        _playerCharacter.DisableAttack();
+        _monoBehaviour.DisableAttack();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

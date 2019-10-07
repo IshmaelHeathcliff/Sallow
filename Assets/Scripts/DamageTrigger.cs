@@ -26,6 +26,7 @@ public class DamageTrigger : MonoBehaviour
 
 
     bool _canDamage;
+    CharacterController2D _characterController;
     Animator _animator;
     Collider2D[] _attackOverlapResults = new Collider2D[10];
 
@@ -35,6 +36,7 @@ public class DamageTrigger : MonoBehaviour
     void Awake()
     {
         _animator = GetComponent<Animator>();
+        _characterController = GetComponent<CharacterController2D>();
     }
 
     public void EnableDamage()
@@ -50,10 +52,8 @@ public class DamageTrigger : MonoBehaviour
     void FixedUpdate()
     {
         if (!_canDamage) return;
-        
-        float horizontal = _animator.GetFloat(FaceDirectionX);
-        float vertical = _animator.GetFloat(FaceDirectionY);
-        var faceDirection = new Vector2(horizontal, vertical);
+
+        Vector2 faceDirection = _characterController.FaceDirection;
         Vector2 centerPosition = (Vector2)transform.position + faceDirection * offset;
         
         _attackOverlapResults = Physics2D.OverlapBoxAll(centerPosition, size, 0f, damageLayer);
