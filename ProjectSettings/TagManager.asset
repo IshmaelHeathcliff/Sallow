@@ -13,7 +13,7 @@ TagManager:
   - UI
   - 
   - 
-  - Enermy
+  - 
   - 
   - 
   - 
@@ -39,8 +39,11 @@ TagManager:
   - 
   m_SortingLayers:
   - name: Ground
-    uniqueID: 3989220511
+    uniqueID: 2821675603
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Character
+    uniqueID: 4269986435
     locked: 0
