@@ -1,172 +1,168 @@
 ﻿using UnityEngine;
 
-namespace Character.CharacterBehaviours
+public abstract class PlayerBehaviour : CharacterBehaviour
 {
-    public abstract class PlayerBehaviour : CharacterBehaviour
-    {
-        protected Animator PlayerAnimator { get; set; }
+    protected Animator PlayerAnimator { get; set; }
 
-        protected PlayerBehaviour(Animator animator)
-        {
-            PlayerAnimator = animator;
-        }
+    protected PlayerBehaviour(Animator animator)
+    {
+        PlayerAnimator = animator;
     }
+}
 
-    public abstract class PlayerAttack : PlayerBehaviour
+public abstract class PlayerAttack : PlayerBehaviour
+{
+    protected float NextAttackTime { get; set; } = Time.time;
+
+    protected float AttackInterval { get; } = 1f;
+
+    protected PlayerAttack(Animator animator) : base(animator)
     {
-        protected float NextAttackTime { get; set; } = Time.time;
-
-        protected float AttackInterval { get; } = 1f;
-
-        protected PlayerAttack(Animator animator) : base(animator)
-        {
-        }
-        
-    }
-
-    public abstract class PlayerMove : PlayerBehaviour
-    {
-        protected CharacterController2D PlayerMoveController { get; set; }
-
-        protected PlayerMove(Animator animator, CharacterController2D characterController2D) : base(animator)
-        {
-            PlayerMoveController = characterController2D;
-        }
-    }
-
-    public class PlayerAttackWithoutWeapon : PlayerAttack
-    {
-        static readonly int AttackTrigger = Animator.StringToHash("attack");
-        
-        public PlayerAttackWithoutWeapon(Animator animator) : base(animator)
-        {}
-
-        public override bool Check()
-        {
-            return PlayerInput.Instance.attack.Held;
-        }
-
-        public override void Execute()
-        {
-            if (Time.time < NextAttackTime) return;
-            PlayerAnimator.SetTrigger(AttackTrigger);
-            NextAttackTime = Time.time + AttackInterval;
-        }
-    }
-
-    public class PlayerAttackWithWeapon : PlayerAttack
-    {
-        static readonly int AttackWithWeaponTrigger = Animator.StringToHash("attackWithWeapon");
-        
-        public PlayerAttackWithWeapon(Animator animator) : base(animator)
-        {}
-
-        public override bool Check()
-        {
-            return PlayerInput.Instance.attackWithWeapon.Held;
-        }
-
-        public override void Execute()
-        {
-            if (Time.time < NextAttackTime) return;
-            PlayerAnimator.SetTrigger(AttackWithWeaponTrigger);
-            NextAttackTime = Time.time + AttackInterval;
-        }
-    }
-
-    public class PlayerWalk : PlayerMove
-    {
-        float _maxSpeed = 4f;
-        float _acceleration = 3f;
-        Vector2 _movement;
-
-        
-        static readonly int WalkDirectionX = Animator.StringToHash("walkDirectionX");
-        static readonly int WalkDirectionY = Animator.StringToHash("walkDirectionY");
-        
-        public PlayerWalk(Animator animator, CharacterController2D characterController2D) : base(animator, characterController2D)
-        {}
-        
-        public override bool Check()
-        {
-            return PlayerInput.Instance.moveController.Moving;
-        }
-
-        public override void Execute()
-        {
-            float horizontal = PlayerInput.Instance.moveController.Horizontal;
-            float vertical = PlayerInput.Instance.moveController.Vertical;
-
-            // 动画控制
-            PlayerAnimator.SetFloat(WalkDirectionX, horizontal);
-            PlayerAnimator.SetFloat(WalkDirectionY, vertical);
-
-            // 控制斜向速度与直向速度相同
-            var speedOffset = 1f;
-            if (2f - Mathf.Abs(horizontal) - Mathf.Abs(vertical) < 0.1f)
-            {
-                speedOffset = 0.7071f;
-            }
-            Vector2 moveDirection = new Vector2(horizontal, vertical) * speedOffset;
-        
-            // 计算移动量并移动
-            if (PlayerMoveController.velocity < _maxSpeed)
-            {
-                _movement = Vector2.MoveTowards(_movement, moveDirection*_maxSpeed, Time.fixedDeltaTime * _acceleration );
-            }
-            if (_movement.magnitude > _maxSpeed * Time.fixedDeltaTime)
-            {
-                _movement = _maxSpeed * Time.fixedDeltaTime * moveDirection;
-            }
-            PlayerMoveController.Move(_movement);
-        }
-    }
-
-    public class PlayerTurn : PlayerBehaviour
-    {
-        static readonly int FaceDirectionX = Animator.StringToHash("faceDirectionX");
-        static readonly int FaceDirectionY = Animator.StringToHash("faceDirectionY");
-
-        public PlayerTurn(Animator animator) : base(animator)
-        {
-        }
-
-        public override bool Check()
-        {
-            return PlayerInput.Instance.moveController.Moving;
-        }
-
-        public override void Execute()
-        {
-            float horizontal = PlayerInput.Instance.moveController.Horizontal;
-            float vertical = PlayerInput.Instance.moveController.Vertical;
-
-            if (Mathf.Abs(vertical) > 0)
-            {
-                PlayerAnimator.SetFloat(FaceDirectionX, 0f);
-                PlayerAnimator.SetFloat(FaceDirectionY, vertical);
-                PlayerCharacter.FaceDirection = new Vector2(0, vertical);
-            }
-            else
-            {
-                PlayerAnimator.SetFloat(FaceDirectionX, horizontal);
-                PlayerAnimator.SetFloat(FaceDirectionY, 0f);
-                PlayerCharacter.FaceDirection = new Vector2(horizontal, 0);
-            }
-        }
     }
     
-    public class PlayerEmptyBehaviour : PlayerBehaviour
+}
+
+public abstract class PlayerMove : PlayerBehaviour
+{
+    protected CharacterController2D PlayerMoveController { get; set; }
+
+    protected PlayerMove(Animator animator, CharacterController2D characterController2D) : base(animator)
     {
-        public PlayerEmptyBehaviour(Animator animator) : base(animator)
-        {}
-
-        public override bool Check()
-        {
-            return false;
-        }
-
-        public override void Execute()
-        {}
+        PlayerMoveController = characterController2D;
     }
+}
+
+public class PlayerAttackWithoutWeapon : PlayerAttack
+{
+    static readonly int AttackTrigger = Animator.StringToHash("attack");
+    
+    public PlayerAttackWithoutWeapon(Animator animator) : base(animator)
+    {}
+
+    public override bool Check()
+    {
+        return PlayerInput.Instance.attack.Held;
+    }
+
+    public override void Execute()
+    {
+        if (Time.time < NextAttackTime) return;
+        PlayerAnimator.SetTrigger(AttackTrigger);
+        NextAttackTime = Time.time + AttackInterval;
+    }
+}
+
+public class PlayerAttackWithWeapon : PlayerAttack
+{
+    static readonly int AttackWithWeaponTrigger = Animator.StringToHash("attackWithWeapon");
+    
+    public PlayerAttackWithWeapon(Animator animator) : base(animator)
+    {}
+
+    public override bool Check()
+    {
+        return PlayerInput.Instance.attackWithWeapon.Held;
+    }
+
+    public override void Execute()
+    {
+        if (Time.time < NextAttackTime) return;
+        PlayerAnimator.SetTrigger(AttackWithWeaponTrigger);
+        NextAttackTime = Time.time + AttackInterval;
+    }
+}
+
+public class PlayerWalk : PlayerMove
+{
+    float _maxSpeed = 4f;
+    float _acceleration = 3f;
+    Vector2 _movement;
+    
+    static readonly int WalkDirectionX = Animator.StringToHash("walkDirectionX");
+    static readonly int WalkDirectionY = Animator.StringToHash("walkDirectionY");
+    
+    public PlayerWalk(Animator animator, CharacterController2D characterController2D) : base(animator, characterController2D)
+    {}
+    
+    public override bool Check()
+    {
+        return PlayerMoveController.CanMove;
+    }
+
+    public override void Execute()
+    {
+        float horizontal = PlayerInput.Instance.moveController.Horizontal;
+        float vertical = PlayerInput.Instance.moveController.Vertical;
+
+        // 动画控制
+        PlayerAnimator.SetFloat(WalkDirectionX, horizontal);
+        PlayerAnimator.SetFloat(WalkDirectionY, vertical);
+
+        // 控制斜向速度与直向速度相同
+        var speedOffset = 1f;
+        if (2f - Mathf.Abs(horizontal) - Mathf.Abs(vertical) < 0.1f)
+        {
+            speedOffset = 0.7071f;
+        }
+        Vector2 moveDirection = new Vector2(horizontal, vertical) * speedOffset;
+    
+        // 计算移动量并移动
+        if (PlayerMoveController.velocity < _maxSpeed)
+        {
+            _movement = Vector2.MoveTowards(_movement, moveDirection*_maxSpeed, Time.fixedDeltaTime * _acceleration );
+        }
+        if (_movement.magnitude > _maxSpeed * Time.fixedDeltaTime)
+        {
+            _movement = _maxSpeed * Time.fixedDeltaTime * moveDirection;
+        }
+        PlayerMoveController.Move(_movement);
+    }
+}
+
+public class PlayerTurn : PlayerMove
+{
+    static readonly int FaceDirectionX = Animator.StringToHash("faceDirectionX");
+    static readonly int FaceDirectionY = Animator.StringToHash("faceDirectionY");
+
+    public PlayerTurn(Animator animator, CharacterController2D characterController) : base(animator, characterController)
+    {
+    }
+
+    public override bool Check()
+    {
+        return PlayerInput.Instance.moveController.Moving && PlayerMoveController.CanMove;
+    }
+
+    public override void Execute()
+    {
+        float horizontal = PlayerInput.Instance.moveController.Horizontal;
+        float vertical = PlayerInput.Instance.moveController.Vertical;
+
+        if (Mathf.Abs(vertical) > 0)
+        {
+            PlayerAnimator.SetFloat(FaceDirectionX, 0f);
+            PlayerAnimator.SetFloat(FaceDirectionY, vertical);
+            PlayerCharacter.FaceDirection = new Vector2(0, vertical);
+        }
+        else
+        {
+            PlayerAnimator.SetFloat(FaceDirectionX, horizontal);
+            PlayerAnimator.SetFloat(FaceDirectionY, 0f);
+            PlayerCharacter.FaceDirection = new Vector2(horizontal, 0);
+        }
+    }
+}
+
+public class PlayerEmptyBehaviour : PlayerBehaviour
+{
+    public PlayerEmptyBehaviour(Animator animator) : base(animator)
+    {}
+
+    public override bool Check()
+    {
+        return false;
+    }
+
+    public override void Execute()
+    {}
 }

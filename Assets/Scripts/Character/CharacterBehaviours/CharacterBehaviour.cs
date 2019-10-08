@@ -1,8 +1,6 @@
-﻿namespace Character.CharacterBehaviours
+﻿
+public abstract class CharacterBehaviour
 {
-    public abstract class CharacterBehaviour
-    {
-        public abstract bool Check();
-        public abstract void Execute();
-    }
+    public abstract bool Check();
+    public abstract void Execute();
 }

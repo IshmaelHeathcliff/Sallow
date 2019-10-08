@@ -1,60 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Character.CharacterBehaviours;
 using UnityEngine;
 
-namespace Character
+public class PlayerBehaviourController : MonoBehaviour
 {
-   public enum PlayerBehaviours
+   enum PlayerBehaviours
    {
       Attack,
       AttackWithWeapon,
       Walk,
       Turn
    }
+   
+   Animator _animator;
+   CharacterController2D _characterController;
+   List<PlayerBehaviour> PlayerBehaviourList { get; set; } = new List<PlayerBehaviour>();
 
-   public class PlayerBehaviourController
+   void Awake()
    {
-      Animator _animator;
-      CharacterController2D _characterController;
-      List<PlayerBehaviour> PlayerBehaviourList { get; set; } = new List<PlayerBehaviour>();
-
-      public PlayerBehaviourController(Animator animator, CharacterController2D characterController)
+      _animator = GetComponent<Animator>();
+      _characterController = GetComponent<CharacterController2D>();
+   
+      foreach (PlayerBehaviours behaviour in (PlayerBehaviours[]) Enum.GetValues(typeof(PlayerBehaviours)))
       {
-         _animator = animator;
-         _characterController = characterController;
-      
-         foreach (PlayerBehaviours behaviour in (PlayerBehaviours[]) Enum.GetValues(typeof(PlayerBehaviours)))
-         {
-            PlayerBehaviourList.Add(CreateBehaviour(behaviour));
-         }
+         PlayerBehaviourList.Add(CreateBehaviour(behaviour));
       }
+   }
 
-      PlayerBehaviour CreateBehaviour(PlayerBehaviours behaviour)
-      {
-         switch (behaviour)
-         {
-            case PlayerBehaviours.Attack:
-               return new PlayerAttackWithoutWeapon(_animator);
-            case PlayerBehaviours.AttackWithWeapon:
-               return new PlayerAttackWithWeapon(_animator);
-            case PlayerBehaviours.Walk:
-               return new PlayerWalk(_animator, _characterController);
-            case PlayerBehaviours.Turn:
-               return new PlayerTurn(_animator);
-            default: 
-               return new PlayerEmptyBehaviour(_animator);
-         }
-      }
+   void FixedUpdate()
+   {
+      ExecuteBehaviours();
+   }
 
-      public void ExecuteBehaviours()
+   PlayerBehaviour CreateBehaviour(PlayerBehaviours behaviour)
+   {
+      switch (behaviour)
       {
-         foreach (PlayerBehaviour playerBehaviour in PlayerBehaviourList.Where(playerBehaviour => playerBehaviour.Check()))
-         {
-            playerBehaviour.Execute();
-         }
+         case PlayerBehaviours.Attack:
+            return new PlayerAttackWithoutWeapon(_animator);
+         case PlayerBehaviours.AttackWithWeapon:
+            return new PlayerAttackWithWeapon(_animator);
+         case PlayerBehaviours.Walk:
+            return new PlayerWalk(_animator, _characterController);
+         case PlayerBehaviours.Turn:
+            return new PlayerTurn(_animator, _characterController);
+         default: 
+            return new PlayerEmptyBehaviour(_animator);
       }
-        
+   }
+
+   void ExecuteBehaviours()
+   {
+      foreach (PlayerBehaviour playerBehaviour in PlayerBehaviourList.Where(playerBehaviour => playerBehaviour.Check()))
+      {
+         playerBehaviour.Execute();
+      }
    }
 }
