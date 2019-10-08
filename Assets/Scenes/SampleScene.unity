@@ -3780,6 +3780,8 @@ GameObject:
   - component: {fileID: 752189714}
   - component: {fileID: 752189721}
   - component: {fileID: 752189720}
+  - component: {fileID: 752189723}
+  - component: {fileID: 752189722}
   m_Layer: 0
   m_Name: hero
   m_TagString: Player
@@ -3811,8 +3813,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aabea49dca5f5b0448d3dd457f0435a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrow: {fileID: 3988320938682530526, guid: 29b819db00b3ca8419dec1a81e935a51, type: 3}
-  arrowOffset: 0.5
 --- !u!70 &752189715
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -3982,6 +3982,33 @@ MonoBehaviour:
   onHeal:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &752189722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752189712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4759121e92849c9b3f3a9c4282acf83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &752189723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752189712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b7b8112daed4b3ba696ed748cb25f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toInstantiate:
+  - {fileID: 3988320938682530526, guid: 29b819db00b3ca8419dec1a81e935a51, type: 3}
+  arrowOffset: 0.5
 --- !u!4 &871508264
 Transform:
   m_ObjectHideFlags: 0

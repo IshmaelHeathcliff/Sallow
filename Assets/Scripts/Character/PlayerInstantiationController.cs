@@ -46,6 +46,6 @@ public class PlayerInstantiationController : InstantiationController
         }
 
         Quaternion arrowInstanceQuaternion = Quaternion.Euler(new Vector3(0, 0, arrowRotation));
-        Instantiate(toInstantiate[_toInstantiateIndex["arrow"]], arrowPosition, arrowInstanceQuaternion);
+        Instantiate(_toInstantiate["arrow"], arrowPosition, arrowInstanceQuaternion);
     }
 }
