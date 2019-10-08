@@ -1,38 +1,54 @@
-﻿using Character.SMBs;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Serialization;
-
-namespace Character
+public class PlayerCharacter : MonoBehaviour
 {
-    public class PlayerCharacter : MonoBehaviour
+    public static Vector2 FaceDirection;
+
+    Animator _animator;
+    DamageTrigger _attackDamageTrigger;
+    CharacterController2D _characterController;
+    PlayerBehaviourController _behaviourController;
+    PlayerInstantiationController _instantiationController;
+
+    void Awake()
     {
-        public static Vector2 FaceDirection;
-    
-        public GameObject arrow;
-        public float arrowOffset;
+        _animator = GetComponent<Animator>();
+        _characterController = GetComponent<CharacterController2D>();
+        _attackDamageTrigger = GetComponent<DamageTrigger>();
+        _behaviourController = GetComponent<PlayerBehaviourController>();
+        _instantiationController = GetComponent<PlayerInstantiationController>();
+    }
 
-        public DamageTrigger AttackDamageTrigger { get; private set; }
-        public CharacterController2D CharacterController { get; private set; }
-        Animator _animator;
-        PlayerBehaviourController _behaviourController;
+    void Start()
+    {
+        FaceDirection = new Vector2(0,-1);
+        SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
+    }
 
-        void Awake()
-        {
-            _animator = GetComponent<Animator>();
-            CharacterController = GetComponent<CharacterController2D>();
-            AttackDamageTrigger = GetComponent<DamageTrigger>();
-            _behaviourController = new PlayerBehaviourController(_animator, CharacterController);
-        }
+    public void EnableAttack()
+    {
+        _attackDamageTrigger.EnableDamage();
+        
+    }
 
-        void Start()
-        {
-            FaceDirection = new Vector2(0,-1);
-            SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
-        }
+    public void EnableMove()
+    {
+        _characterController.EnableMove();
+    }
 
-        void FixedUpdate()
-        {
-            _behaviourController.ExecuteBehaviours();
-        }
+    public void DisableMove()
+    {
+        _characterController.DisableMove();
+    }
+
+    public void DisableAttack()
+    {
+        _attackDamageTrigger.DisableDamage();
+        
+    }
+
+    public void Instantiate(string objectName)
+    {
+        _instantiationController.InstantiateGameObject(objectName);
     }
 }
