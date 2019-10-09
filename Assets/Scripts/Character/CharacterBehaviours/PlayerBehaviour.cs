@@ -151,8 +151,8 @@ public class PlayerTurn : PlayerMove
 
         PlayerAnimator.SetFloat(FaceDirectionX, horizontal);
         PlayerAnimator.SetFloat(FaceDirectionY, vertical);
-        PlayerBehaviourInfo.Instance.FaceDirection = new Vector2(horizontal, vertical);
-        PlayerBehaviourInfo.Instance.faceDirectionChanged.Invoke(new Vector2(horizontal, vertical));
+        PlayerCharacter.Instance.FaceDirection = new Vector2(horizontal, vertical);
+        PlayerCharacter.Instance.faceDirectionChanged.Invoke(new Vector2(horizontal, vertical));
     }
 }
 

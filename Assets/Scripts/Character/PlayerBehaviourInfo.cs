@@ -8,14 +8,6 @@ public class PlayerBehaviourInfo : MonoBehaviour
     static PlayerBehaviourInfo _instance;
 
     public static PlayerBehaviourInfo Instance { get; private set; }
-    
-    [Serializable]
-    public class ParameterEvent : UnityEvent<Vector2>
-    {}
-
-    // global
-    public Vector2 FaceDirection { get; set; }
-    public ParameterEvent faceDirectionChanged;
 
     // PlayerAttack
     [SerializeField] float attackInterval = 0.5f;
@@ -49,6 +41,6 @@ public class PlayerBehaviourInfo : MonoBehaviour
 
     void Start()
     {
-        FaceDirection = new Vector2(0,-1);
+        DontDestroyOnLoad(this);
     }
 }

@@ -2,7 +2,6 @@
 
 public class PlayerInput : MonoBehaviour
 {
-    static PlayerInput _instance;
     public static PlayerInput Instance { get; private set; }
     public InputAxis moveController = new InputAxis();
     public InputButton pause = new InputButton(KeyCode.Escape);

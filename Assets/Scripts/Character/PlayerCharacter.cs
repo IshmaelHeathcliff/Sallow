@@ -1,21 +1,37 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 public class PlayerCharacter : MonoBehaviour
 {
+    public static PlayerCharacter Instance { get; private set; }
+    
     Animator _animator;
     DamageTrigger _attackDamageTrigger;
     CharacterController2D _characterController;
     PlayerBehaviourController _behaviourController;
     PlayerInstantiationController _instantiationController;
+    
+    [Serializable]
+    public class ParameterEvent : UnityEvent<Vector2>
+    {}
+    public Vector2 FaceDirection { get; set; }
+    public ParameterEvent faceDirectionChanged;
 
     void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        
         _animator = GetComponent<Animator>();
         _characterController = GetComponent<CharacterController2D>();
         _attackDamageTrigger = GetComponent<DamageTrigger>();
         _behaviourController = GetComponent<PlayerBehaviourController>();
         _instantiationController = GetComponent<PlayerInstantiationController>();
+
     }
 
     void Start()

@@ -11,6 +11,7 @@ public class Arrow : MonoBehaviour
     BoxCollider2D _boxCollider;
     DamageTrigger _damageTrigger;
     Animator _animator;
+    Vector2 _faceDirection;
     
     static readonly int ArrowBreak = Animator.StringToHash("arrowBreak");
 
@@ -24,8 +25,9 @@ public class Arrow : MonoBehaviour
 
     void Start()
     {
-        _rigidbody.velocity = PlayerBehaviourInfo.Instance.FaceDirection * arrowSpeed;
-        _damageTrigger.FaceDirection = PlayerBehaviourInfo.Instance.FaceDirection;
+        _faceDirection = PlayerCharacter.Instance.FaceDirection;
+        _rigidbody.velocity = _faceDirection * arrowSpeed;
+        _damageTrigger.FaceDirection = _faceDirection;
         _damageTrigger.EnableDamage();
         SceneLinkedSMB<Arrow>.Initialise(_animator, this);
     }

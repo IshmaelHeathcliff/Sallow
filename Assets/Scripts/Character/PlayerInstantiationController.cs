@@ -24,7 +24,7 @@ public class PlayerInstantiationController : InstantiationController
 
     void InstantiateArrow()
     {
-        Vector3 faceDirection = PlayerBehaviourInfo.Instance.FaceDirection;
+        Vector3 faceDirection = PlayerCharacter.Instance.FaceDirection;
         Vector3 arrowPosition = transform.position +  faceDirection * arrowOffset;
         float arrowRotation;
         switch (faceDirection.x * 10 + faceDirection.y)
