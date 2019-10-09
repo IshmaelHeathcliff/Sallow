@@ -15,17 +15,15 @@ public class PlayerBehaviourController : MonoBehaviour
    
    Animator _animator;
    CharacterController2D _characterController;
-   List<PlayerBehaviour> PlayerBehaviourList { get; set; } = new List<PlayerBehaviour>();
+   Dictionary<PlayerBehaviours, PlayerBehaviour> PlayerBehaviourDictionary { get; set; } = 
+      new Dictionary<PlayerBehaviours, PlayerBehaviour>();
 
    void Awake()
    {
       _animator = GetComponent<Animator>();
       _characterController = GetComponent<CharacterController2D>();
    
-      foreach (PlayerBehaviours behaviour in (PlayerBehaviours[]) Enum.GetValues(typeof(PlayerBehaviours)))
-      {
-         PlayerBehaviourList.Add(CreateBehaviour(behaviour));
-      }
+      AddBehaviours();
    }
 
    void FixedUpdate()
@@ -33,27 +31,43 @@ public class PlayerBehaviourController : MonoBehaviour
       ExecuteBehaviours();
    }
 
-   PlayerBehaviour CreateBehaviour(PlayerBehaviours behaviour)
+   void AddBehaviours()
    {
+      foreach (PlayerBehaviours behaviour in (PlayerBehaviours[]) Enum.GetValues(typeof(PlayerBehaviours)))
+      {  
+         AddBehaviour(behaviour);
+      }
+   }
+
+   void AddBehaviour(PlayerBehaviours behaviour)
+   {
+      PlayerBehaviour newPlayerBehaviour;
       switch (behaviour)
       {
          case PlayerBehaviours.Attack:
-            return new PlayerAttackWithoutWeapon(_animator);
+            newPlayerBehaviour =  new PlayerAttackWithoutWeapon(_animator);
+            break;
          case PlayerBehaviours.AttackWithWeapon:
-            return new PlayerAttackWithWeapon(_animator);
+            newPlayerBehaviour = new PlayerAttackWithWeapon(_animator);
+            break;
          case PlayerBehaviours.Walk:
-            return new PlayerWalk(_animator, _characterController);
+            newPlayerBehaviour = new PlayerWalk(_animator, _characterController);
+            break;
          case PlayerBehaviours.Turn:
-            return new PlayerTurn(_animator, _characterController);
+            newPlayerBehaviour = new PlayerTurn(_animator, _characterController);
+            break;
          default: 
-            return new PlayerEmptyBehaviour(_animator);
+            newPlayerBehaviour = new PlayerEmptyBehaviour(_animator);
+            break;
       }
+      
+      PlayerBehaviourDictionary.Add(behaviour, newPlayerBehaviour);
    }
 
    void ExecuteBehaviours()
    {
       foreach (PlayerBehaviour playerBehaviour in 
-         PlayerBehaviourList.Where(playerBehaviour => playerBehaviour.Check()))
+         PlayerBehaviourDictionary.Values.Where(playerBehaviour => playerBehaviour.Check()))
       {
          playerBehaviour.SetParameters();
          playerBehaviour.Execute();
