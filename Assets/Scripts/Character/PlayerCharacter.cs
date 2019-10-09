@@ -1,9 +1,8 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Serialization;
 public class PlayerCharacter : MonoBehaviour
 {
-    public static Vector2 FaceDirection;
-
     Animator _animator;
     DamageTrigger _attackDamageTrigger;
     CharacterController2D _characterController;
@@ -21,13 +20,18 @@ public class PlayerCharacter : MonoBehaviour
 
     void Start()
     {
-        FaceDirection = new Vector2(0,-1);
         SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
     }
 
     public void EnableAttack()
     {
-        _attackDamageTrigger.EnableDamage();
+        StartCoroutine(AttackProcess());
+
+    }
+
+    public void DisableAttack()
+    {
+        _attackDamageTrigger.DisableDamage();
         
     }
 
@@ -41,14 +45,14 @@ public class PlayerCharacter : MonoBehaviour
         _characterController.DisableMove();
     }
 
-    public void DisableAttack()
-    {
-        _attackDamageTrigger.DisableDamage();
-        
-    }
-
     public void Instantiate(string objectName)
     {
         _instantiationController.InstantiateGameObject(objectName);
+    }
+
+    IEnumerator AttackProcess()
+    {
+        yield return new WaitForSeconds(0.2f);
+        _attackDamageTrigger.EnableDamage();
     }
 }

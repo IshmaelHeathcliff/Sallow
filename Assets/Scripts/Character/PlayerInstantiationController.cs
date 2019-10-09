@@ -24,9 +24,10 @@ public class PlayerInstantiationController : InstantiationController
 
     void InstantiateArrow()
     {
-        Vector3 arrowPosition = transform.position + (Vector3)PlayerCharacter.FaceDirection * arrowOffset;
+        Vector3 faceDirection = PlayerBehaviourInfo.Instance.FaceDirection;
+        Vector3 arrowPosition = transform.position +  faceDirection * arrowOffset;
         float arrowRotation;
-        switch (PlayerCharacter.FaceDirection.x * 10 + PlayerCharacter.FaceDirection.y)
+        switch (faceDirection.x * 10 + faceDirection.y)
         {
             case 1f: 
                 arrowRotation = 0f;

@@ -2,7 +2,6 @@
 public class CharacterController2D : MonoBehaviour
 {
     public float velocity;
-    public Vector2 FaceDirection { get; set; }
 
     Rigidbody2D _rigidbody;
     Vector2 _movement;

@@ -3782,6 +3782,7 @@ GameObject:
   - component: {fileID: 752189720}
   - component: {fileID: 752189723}
   - component: {fileID: 752189722}
+  - component: {fileID: 752189724}
   m_Layer: 0
   m_Name: hero
   m_TagString: Player
@@ -4009,6 +4010,35 @@ MonoBehaviour:
   toInstantiate:
   - {fileID: 3988320938682530526, guid: 29b819db00b3ca8419dec1a81e935a51, type: 3}
   arrowOffset: 0.5
+--- !u!114 &752189724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752189712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 661ff28da739454781041ea98e1c359f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faceDirectionChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 752189720}
+        m_MethodName: set_FaceDirection
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  attackInterval: 0.5
+  maxSpeed: 4
+  acceleration: 3
 --- !u!4 &871508264
 Transform:
   m_ObjectHideFlags: 0
@@ -4213,7 +4243,7 @@ GameObject:
   - component: {fileID: 2019516997}
   - component: {fileID: 2019516996}
   - component: {fileID: 2019516995}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: WallTilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}

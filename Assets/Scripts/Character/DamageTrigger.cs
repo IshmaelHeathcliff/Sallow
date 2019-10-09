@@ -9,6 +9,7 @@ public class DamageTrigger : MonoBehaviour
     public int damage = 1;
     public LayerMask damageLayer;
 
+
     [Serializable]
     public class DamageHitEvent : UnityEvent<DamageTrigger, DamageBearer>
     {
@@ -24,7 +25,10 @@ public class DamageTrigger : MonoBehaviour
 
     bool _canDamage;
     Collider2D[] _attackOverlapResults = new Collider2D[10];
-
+    
+    
+    public Vector2 FaceDirection { get; set; }
+    
     public void EnableDamage()
     {
         _canDamage = true;
@@ -38,9 +42,8 @@ public class DamageTrigger : MonoBehaviour
     void FixedUpdate()
     {
         if (!_canDamage) return;
-
-        Vector2 faceDirection = PlayerCharacter.FaceDirection;
-        Vector2 centerPosition = (Vector2)transform.position + faceDirection * offset;
+        
+        Vector2 centerPosition = (Vector2)transform.position + FaceDirection * offset;
     
         _attackOverlapResults = Physics2D.OverlapBoxAll(centerPosition, size, 0f, damageLayer);
         if (_attackOverlapResults.Length == 0) return;

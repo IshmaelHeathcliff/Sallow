@@ -14,10 +14,15 @@ public abstract class PlayerAttack : PlayerBehaviour
 {
     protected float NextAttackTime { get; set; } = Time.time;
 
-    protected float AttackInterval { get; } = 1f;
+    protected float AttackInterval { get; set; } = 0.5f;
 
     protected PlayerAttack(Animator animator) : base(animator)
     {
+    }
+    
+    public override void SetParameters()
+    {
+        AttackInterval = PlayerBehaviourInfo.Instance.AttackInterval;
     }
     
 }
@@ -89,6 +94,12 @@ public class PlayerWalk : PlayerMove
         return PlayerMoveController.CanMove;
     }
 
+    public override void SetParameters()
+    {
+        _maxSpeed = PlayerBehaviourInfo.Instance.MaxSpeed;
+        _acceleration = PlayerBehaviourInfo.Instance.Acceleration;
+    }
+
     public override void Execute()
     {
         float horizontal = PlayerInput.Instance.moveController.Horizontal;
@@ -135,21 +146,13 @@ public class PlayerTurn : PlayerMove
 
     public override void Execute()
     {
-        float horizontal = PlayerInput.Instance.moveController.Horizontal;
         float vertical = PlayerInput.Instance.moveController.Vertical;
+        float horizontal = Mathf.Abs(vertical) > 0 ? 0f : PlayerInput.Instance.moveController.Horizontal;
 
-        if (Mathf.Abs(vertical) > 0)
-        {
-            PlayerAnimator.SetFloat(FaceDirectionX, 0f);
-            PlayerAnimator.SetFloat(FaceDirectionY, vertical);
-            PlayerCharacter.FaceDirection = new Vector2(0, vertical);
-        }
-        else
-        {
-            PlayerAnimator.SetFloat(FaceDirectionX, horizontal);
-            PlayerAnimator.SetFloat(FaceDirectionY, 0f);
-            PlayerCharacter.FaceDirection = new Vector2(horizontal, 0);
-        }
+        PlayerAnimator.SetFloat(FaceDirectionX, horizontal);
+        PlayerAnimator.SetFloat(FaceDirectionY, vertical);
+        PlayerBehaviourInfo.Instance.FaceDirection = new Vector2(horizontal, vertical);
+        PlayerBehaviourInfo.Instance.faceDirectionChanged.Invoke(new Vector2(horizontal, vertical));
     }
 }
 

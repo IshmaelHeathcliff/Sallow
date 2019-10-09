@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 1575107349923442380}
   - component: {fileID: -5114823943440088704}
   - component: {fileID: 5265984426312469866}
+  - component: {fileID: 2023030798002411533}
+  - component: {fileID: 1457407244259849988}
   m_Layer: 0
   m_Name: arrow
   m_TagString: Untagged
@@ -96,7 +98,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.21911684}
+  m_Offset: {x: 0.0006729588, y: 0.00040450692}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -107,7 +109,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.15625, y: 0.15551634}
+  m_Size: {x: 0.09299165, y: 0.592941}
   m_EdgeRadius: 0
 --- !u!50 &-5114823943440088704
 Rigidbody2D:
@@ -129,7 +131,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &5265984426312469866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,3 +145,68 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrowSpeed: 6
+--- !u!114 &2023030798002411533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3988320938682530526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3835f2de5e3d7534dbc4a45895c31da2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: 0.3
+  size: {x: 0.1, y: 0.1}
+  damage: 1
+  damageLayer:
+    serializedVersion: 2
+    m_Bits: 768
+  onDamageHit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5265984426312469866}
+        m_MethodName: DisableArrow
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onDamageNotHit:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5265984426312469866}
+        m_MethodName: Break
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!95 &1457407244259849988
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3988320938682530526}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 658ae0b47b4581f4f9de872227da89d2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

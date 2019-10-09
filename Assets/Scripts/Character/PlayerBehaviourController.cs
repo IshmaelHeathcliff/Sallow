@@ -52,8 +52,10 @@ public class PlayerBehaviourController : MonoBehaviour
 
    void ExecuteBehaviours()
    {
-      foreach (PlayerBehaviour playerBehaviour in PlayerBehaviourList.Where(playerBehaviour => playerBehaviour.Check()))
+      foreach (PlayerBehaviour playerBehaviour in 
+         PlayerBehaviourList.Where(playerBehaviour => playerBehaviour.Check()))
       {
+         playerBehaviour.SetParameters();
          playerBehaviour.Execute();
       }
    }
