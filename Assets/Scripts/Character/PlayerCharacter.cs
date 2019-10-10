@@ -14,10 +14,12 @@ public class PlayerCharacter : MonoBehaviour
     PlayerInstantiationController _instantiationController;
     
     [Serializable]
-    public class ParameterEvent : UnityEvent<Vector2>
+    public class ParameterChangedEvent : UnityEvent<Vector2>
     {}
     public Vector2 FaceDirection { get; set; }
-    public ParameterEvent faceDirectionChanged;
+    public ParameterChangedEvent onFaceDirectionChanged;
+    
+    public int ArrowCount { get; set; }
 
     void Awake()
     {
@@ -36,6 +38,8 @@ public class PlayerCharacter : MonoBehaviour
 
     void Start()
     {
+        FaceDirection = new Vector2(0, -1);
+        ArrowCount = PlayerBehaviourInfo.Instance.MaxArrowCount;
         SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
     }
 
@@ -64,6 +68,12 @@ public class PlayerCharacter : MonoBehaviour
     public void Instantiate(string objectName)
     {
         _instantiationController.InstantiateGameObject(objectName);
+    }
+
+    public void CollectArrow()
+    {
+        if (ArrowCount == PlayerBehaviourInfo.Instance.MaxArrowCount) return;
+        ArrowCount++;
     }
 
     IEnumerator AttackProcess()

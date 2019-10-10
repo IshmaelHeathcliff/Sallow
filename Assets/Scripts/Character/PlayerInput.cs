@@ -16,7 +16,6 @@ public class PlayerInput : MonoBehaviour
             Instance = this;
         }
     }
-
     void Update()
     {
         moveController.Get();

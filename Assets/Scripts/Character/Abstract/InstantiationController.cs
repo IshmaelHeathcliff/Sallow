@@ -4,15 +4,20 @@ using UnityEngine;
 public abstract class InstantiationController : MonoBehaviour
 {
     public GameObject[] toInstantiate;
-    protected Dictionary<string, GameObject> _toInstantiate = new Dictionary<string, GameObject>();
+    protected Dictionary<string, GameObject> ToInstantiate = new Dictionary<string, GameObject>();
 
     protected virtual void Awake()
     {
         foreach (GameObject o in toInstantiate)
         {
-            _toInstantiate.Add(o.ToString().Split(' ')[0], o);
+            AddToInstantiate(o);
         }
     }
 
     public abstract void InstantiateGameObject(string objectName);
+
+    public void AddToInstantiate(GameObject instance)
+    {
+        ToInstantiate.Add(instance.ToString().Split(' ')[0], instance);
+    }
 }

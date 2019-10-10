@@ -71,8 +71,9 @@ public class PlayerAttackWithWeapon : PlayerAttack
 
     public override void Execute()
     {
-        if (Time.time < NextAttackTime) return;
+        if (Time.time < NextAttackTime || PlayerCharacter.Instance.ArrowCount == 0) return;
         PlayerAnimator.SetTrigger(AttackWithWeaponTrigger);
+        PlayerCharacter.Instance.ArrowCount--;
         NextAttackTime = Time.time + AttackInterval;
     }
 }
@@ -152,7 +153,7 @@ public class PlayerTurn : PlayerMove
         PlayerAnimator.SetFloat(FaceDirectionX, horizontal);
         PlayerAnimator.SetFloat(FaceDirectionY, vertical);
         PlayerCharacter.Instance.FaceDirection = new Vector2(horizontal, vertical);
-        PlayerCharacter.Instance.faceDirectionChanged.Invoke(new Vector2(horizontal, vertical));
+        PlayerCharacter.Instance.onFaceDirectionChanged.Invoke(new Vector2(horizontal, vertical));
     }
 }
 

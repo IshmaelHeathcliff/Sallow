@@ -5,18 +5,27 @@ using UnityEngine.Serialization;
 
 public class PlayerBehaviourInfo : MonoBehaviour
 {
-    static PlayerBehaviourInfo _instance;
-
     public static PlayerBehaviourInfo Instance { get; private set; }
 
+    // global
+    
     // PlayerAttack
     [SerializeField] float attackInterval = 0.5f;
+
     public float AttackInterval
     {
         get => attackInterval;
         set => attackInterval = value;
     }
-    
+
+    // PlayerAttackWithWeapon
+    [SerializeField] int maxArrowCount = 5;
+    public int MaxArrowCount
+    {
+        get => maxArrowCount;
+        set => maxArrowCount = value;
+    }
+
     // PlayerWalk
     [SerializeField] float maxSpeed = 4f;
     [SerializeField] float acceleration = 3f;

@@ -12,6 +12,7 @@ public class Arrow : MonoBehaviour
     DamageTrigger _damageTrigger;
     Animator _animator;
     Vector2 _faceDirection;
+    CollectableArrow _collectableArrow;
     
     static readonly int ArrowBreak = Animator.StringToHash("arrowBreak");
 
@@ -21,6 +22,7 @@ public class Arrow : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider2D>();
         _damageTrigger = GetComponent<DamageTrigger>();
         _animator = GetComponent<Animator>();
+        _collectableArrow = GetComponent<CollectableArrow>();
     }
 
     void Start()
@@ -37,6 +39,7 @@ public class Arrow : MonoBehaviour
         _rigidbody.bodyType = RigidbodyType2D.Static;
         _boxCollider.isTrigger = true;
         _damageTrigger.DisableDamage();
+        _collectableArrow.EnableCollectable();
     }
 
     public void DestroyArrow()

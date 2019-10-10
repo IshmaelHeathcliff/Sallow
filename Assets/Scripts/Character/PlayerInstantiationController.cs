@@ -4,12 +4,7 @@ using UnityEngine;
 public class PlayerInstantiationController : InstantiationController
 {
     public float arrowOffset = 0.5f;
-
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
+    
     public override void InstantiateGameObject(string objectName)
     {
         switch (objectName)
@@ -47,6 +42,7 @@ public class PlayerInstantiationController : InstantiationController
         }
 
         Quaternion arrowInstanceQuaternion = Quaternion.Euler(new Vector3(0, 0, arrowRotation));
-        Instantiate(_toInstantiate["arrow"], arrowPosition, arrowInstanceQuaternion);
+        GameObject arrowInstance = Instantiate(ToInstantiate["arrow"], arrowPosition, arrowInstanceQuaternion);
+        arrowInstance.GetComponent<CollectableArrow>().onCollected.AddListener(PlayerCharacter.Instance.CollectArrow);
     }
 }
