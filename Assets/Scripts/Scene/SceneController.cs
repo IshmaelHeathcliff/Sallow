@@ -23,23 +23,70 @@ public class SceneController : MonoBehaviour
         }
     }
 
+
+    Scene _currentScene;
+    // TransitionDestination.TransitionDestinationTag _restartDestinationTag = TransitionDestination.TransitionDestinationTag.A;
+    public bool Transitioning { get; private set; }
+
+    void Awake()
+    {
+        _currentScene = SceneManager.GetActiveScene();
+        // _restartDestinationTag = TransitionDestination.TransitionDestinationTag.A;
+    }
+
     void Start()
     {
         DontDestroyOnLoad(this);
     }
 
+    public void StartTransition(TransitionDeparture transitionDeparture)
+    {
+        StartCoroutine(Transition(transitionDeparture));
+    }
     IEnumerator Transition(TransitionDeparture transitionDeparture)
     {
+        Transitioning = true;
+        
         PlayerInput.Instance.ReleaseControl();
         PersistentDataManager.Instance.SaveAllData();
         PersistentDataManager.Instance.ClearPersistables();
         yield return SceneManager.LoadSceneAsync(transitionDeparture.NextSceneName);
         PersistentDataManager.Instance.LoadAllData();
-        PersistentDataManager.Instance.ClearData();
+        TransitionDestination destination = GetDestination(transitionDeparture.DestinationTag);
+        SetDestinationGameObjectPosition(destination);
+        PlayerInput.Instance.GainControl();
+
+        Transitioning = false;
+
     }
 
-    void GetDestination(TransitionDestination.TransitionDestinationTag destinationTag)
-    {}
+    TransitionDestination GetDestination(TransitionDestination.TransitionDestinationTag destinationTag)
+    {
+        TransitionDestination[] destinations = FindObjectsOfType<TransitionDestination>();
+        foreach (TransitionDestination destination in destinations)
+        {
+            if (destination.DestinationTag == destinationTag)
+            {
+                return destination;
+            }
+        }
+        
+        Debug.LogWarning("Scene transition destination not found.");
+        return null;
+    }
 
+    void SetDestinationGameObjectPosition(TransitionDestination destination)
+    {
+        if (destination == null)
+        {
+            Debug.LogWarning("Destination position not set.");
+            return;
+        }
+        
+        Transform gameObjectTransform = destination.GameObjectTransitioned.transform;
+        Transform destinationTransform = destination.transform;
+        gameObjectTransform.position = destinationTransform.position;
+        gameObjectTransform.rotation = destinationTransform.rotation;
+    }
 
 }

@@ -149,9 +149,7 @@ public class PlayerTurn : PlayerMove
     {
         float vertical = PlayerInput.Instance.MoveController.Vertical;
         float horizontal = Mathf.Abs(vertical) > 0 ? 0f : PlayerInput.Instance.MoveController.Horizontal;
-
-        PlayerAnimator.SetFloat(FaceDirectionX, horizontal);
-        PlayerAnimator.SetFloat(FaceDirectionY, vertical);
+        
         PlayerCharacter.Instance.FaceDirection = new Vector2(horizontal, vertical);
         PlayerCharacter.Instance.onFaceDirectionChanged.Invoke(new Vector2(horizontal, vertical));
     }

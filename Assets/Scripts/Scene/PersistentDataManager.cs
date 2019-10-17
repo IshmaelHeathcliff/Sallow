@@ -1,5 +1,7 @@
 ﻿
+using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class PersistentDataManager
 {
@@ -8,7 +10,7 @@ public class PersistentDataManager
     public static PersistentDataManager Instance => _instance ?? (_instance = new PersistentDataManager());
 
     PersistentDataManager(){}
-    
+
     List<IDataPersistable> _dataPersistables = new List<IDataPersistable>();
 
     Dictionary<string, Data> _persistentData = new Dictionary<string, Data>();
@@ -33,26 +35,23 @@ public class PersistentDataManager
 
     void SaveData(IDataPersistable persistable)
     {
+        if (persistable.DataInfo.PersistenceType == DataInfo.DataPersistenceType.DoNotPersist) return;
         Data data = persistable.SaveData();
-        string dataTag = persistable.DataTag;
-        _persistentData.Add(dataTag, data);
+        string dataTag = persistable.DataInfo.DataTag;
+        _persistentData[dataTag] = data;
     }
 
     public void LoadAllData()
     {
         foreach (IDataPersistable persistable in _dataPersistables)
         {
-            string dataTag = persistable.DataTag;
+            if(persistable.DataInfo.PersistenceType == DataInfo.DataPersistenceType.DoNotPersist) continue;
+            string dataTag = persistable.DataInfo.DataTag;
             if (_persistentData.ContainsKey(dataTag))
             {
                 persistable.LoadData(_persistentData[dataTag]);
             }
         }
-    }
-
-    public void ClearData()
-    {
-        _persistentData.Clear();
     }
 
     public void ClearPersistables()

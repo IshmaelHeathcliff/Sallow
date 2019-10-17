@@ -1,11 +1,29 @@
 ﻿
+using System;
+using UnityEngine;
+
 public interface IDataPersistable
 {
+    DataInfo DataInfo { get; set; }
+
     void LoadData(Data data);
 
     Data SaveData();
+}
 
-    string DataTag { get; set; }
+[Serializable]
+public class DataInfo
+{
+    public enum DataPersistenceType
+    {
+        Persist,
+        DoNotPersist
+    }
+
+    [SerializeField] string dataTag = Guid.NewGuid().ToString();
+    [SerializeField] DataPersistenceType persistenceType = DataPersistenceType.Persist;
+    public string DataTag => dataTag;
+    public DataPersistenceType PersistenceType => persistenceType;
 }
 
 public abstract class Data
@@ -82,5 +100,3 @@ public class Data<T1, T2, T3, T4, T5> : Data
         Data5 = data5;
     }
 }
-
-    

@@ -9,6 +9,7 @@ public class PlayerBehaviourInfo : MonoBehaviour, IDataPersistable
     public static PlayerBehaviourInfo Instance { get; private set; }
 
     // global
+    [SerializeField] DataInfo dataInfo;
     
     // PlayerAttack
     [SerializeField] float attackInterval = 0.5f;
@@ -20,20 +21,24 @@ public class PlayerBehaviourInfo : MonoBehaviour, IDataPersistable
     [SerializeField] float maxSpeed = 4f;
     [SerializeField] float acceleration = 3f;
 
+    public DataInfo DataInfo
+    {
+        get => dataInfo;
+        set => dataInfo = value;
+    }
+
     // int Data
     public int MaxArrowCount
     {
         get => maxArrowCount;
         set => maxArrowCount = value;
     }
-
     // float Data
     public float AttackInterval
     {
         get => attackInterval;
         set => attackInterval = value;
     }
-
     public float MaxSpeed
     {
         get => maxSpeed;
@@ -54,7 +59,10 @@ public class PlayerBehaviourInfo : MonoBehaviour, IDataPersistable
         }
     }
 
-    public string DataTag { get; set; } = "PlayerBehaviourInfoData";
+    void Start()
+    {
+        PersistentDataManager.Instance.Register(this);
+    }
 
     public void LoadData(Data data)
     {

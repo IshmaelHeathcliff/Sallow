@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
-public class PlayerCharacter : MonoBehaviour
+public class PlayerCharacter : MonoBehaviour, IDataPersistable
 {
     public static PlayerCharacter Instance { get; private set; }
     
@@ -13,12 +13,35 @@ public class PlayerCharacter : MonoBehaviour
     PlayerBehaviourController _behaviourController;
     PlayerInstantiationController _instantiationController;
     
-    [Serializable]
-    public class ParameterChangedEvent : UnityEvent<Vector2>
-    {}
-    public Vector2 FaceDirection { get; set; }
-    public ParameterChangedEvent onFaceDirectionChanged;
+    [SerializeField] DataInfo dataInfo = null;
     
+    [Serializable] public class ParameterChangedEvent : UnityEvent<Vector2>
+    {}
+    public ParameterChangedEvent onFaceDirectionChanged;
+
+
+    static readonly int FaceDirectionX = Animator.StringToHash("faceDirectionX");
+    static readonly int FaceDirectionY = Animator.StringToHash("faceDirectionY");
+
+    Vector2 _faceDirection = new Vector2(0, -1);
+
+    public Vector2 FaceDirection
+    {
+        get => _faceDirection;
+        set
+        {
+            _faceDirection = value;
+            _animator.SetFloat(FaceDirectionX, value.x);
+            _animator.SetFloat(FaceDirectionY, value.y);
+        }
+    }
+
+    public DataInfo DataInfo
+    {
+        get => dataInfo;
+        set => dataInfo = value;
+    }
+
     public int ArrowCount { get; set; }
 
     void Awake()
@@ -33,13 +56,15 @@ public class PlayerCharacter : MonoBehaviour
         _attackDamageTrigger = GetComponent<DamageTrigger>();
         _behaviourController = GetComponent<PlayerBehaviourController>();
         _instantiationController = GetComponent<PlayerInstantiationController>();
+        
+        ArrowCount = PlayerBehaviourInfo.Instance.MaxArrowCount;
+        PersistentDataManager.Instance.Register(this);
 
     }
 
     void Start()
     {
-        FaceDirection = new Vector2(0, -1);
-        ArrowCount = PlayerBehaviourInfo.Instance.MaxArrowCount;
+        
         SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
     }
 
@@ -52,7 +77,6 @@ public class PlayerCharacter : MonoBehaviour
     public void DisableAttack()
     {
         _attackDamageTrigger.DisableDamage();
-        
     }
 
     public void EnableMove()
@@ -80,5 +104,20 @@ public class PlayerCharacter : MonoBehaviour
     {
         yield return new WaitForSeconds(0.2f);
         _attackDamageTrigger.EnableDamage();
+    }
+
+    public Data SaveData()
+    {
+        var data = new Data<Vector2, int> (FaceDirection, ArrowCount);
+        Debug.Log("ArrowCount :" + ArrowCount);
+        return data;
+    }
+
+    public void LoadData(Data data)
+    {
+        FaceDirection = ((Data<Vector2, int>) data).Data1;
+        onFaceDirectionChanged.Invoke(FaceDirection);
+        ArrowCount = ((Data<Vector2, int>) data).Data2;
+        Debug.Log("ArrowCount :" + ArrowCount);
     }
 }

@@ -2,14 +2,25 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DamageTrigger : MonoBehaviour
+public class DamageTrigger : MonoBehaviour, IDataPersistable
 {
     [SerializeField] float offset = 0.2f;
     [SerializeField] Vector2 size = new Vector2(0.1f, 0.1f);
     [SerializeField] int damage = 1;
     [SerializeField] LayerMask damageLayer = LayerMask.GetMask();
+    [SerializeField] DataInfo dataInfo;
 
-    public int Damage => damage;
+    public int Damage
+    {
+        get => damage;
+        set => damage = value;
+    }
+
+    public DataInfo DataInfo 
+    { 
+        get => dataInfo;
+        set => dataInfo = value; 
+    }
 
     [Serializable] public class DamageHitEvent : UnityEvent<DamageTrigger, DamageBearer>
     {
@@ -27,7 +38,12 @@ public class DamageTrigger : MonoBehaviour
     
     
     public Vector2 FaceDirection { get; set; }
-    
+
+    void Start()
+    {
+        PersistentDataManager.Instance.Register(this);
+    }
+
     public void EnableDamage()
     {
         _canDamage = true;
@@ -59,5 +75,15 @@ public class DamageTrigger : MonoBehaviour
                 onDamageNotHit.Invoke(this);
             }
         }
+    }
+
+    public Data SaveData()
+    {
+        return new Data<int>(Damage);
+    }
+
+    public void LoadData(Data data)
+    {
+        Damage = ((Data<int>) data).Data1;
     }
 }
