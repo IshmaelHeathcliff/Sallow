@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 public class CharacterController2D : MonoBehaviour
 {
-    public float velocity;
+    public float Velocity { get; private set; }
 
     Rigidbody2D _rigidbody;
     Vector2 _movement;
@@ -32,7 +32,7 @@ public class CharacterController2D : MonoBehaviour
     {
         Vector2 oldPosition = _rigidbody.position;
         Vector2 newPosition = oldPosition + _movement;
-        velocity = _movement.magnitude / Time.deltaTime;
+        Velocity = _movement.magnitude / Time.deltaTime;
         _rigidbody.MovePosition(newPosition);
         _movement = Vector2.zero;
     }

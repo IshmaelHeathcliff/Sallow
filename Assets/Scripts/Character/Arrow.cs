@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 public class Arrow : MonoBehaviour
 {
-    public float arrowSpeed;
+    [SerializeField] float arrowSpeed = 6f;
     
     Rigidbody2D _rigidbody;
     BoxCollider2D _boxCollider;

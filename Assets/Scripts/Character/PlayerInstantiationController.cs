@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerInstantiationController : InstantiationController
 {
-    public float arrowOffset = 0.5f;
+    [SerializeField] float arrowOffset = 0.5f;
     
     public override void InstantiateGameObject(string objectName)
     {

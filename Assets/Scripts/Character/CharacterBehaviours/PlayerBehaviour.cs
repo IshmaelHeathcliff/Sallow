@@ -46,7 +46,7 @@ public class PlayerAttackWithoutWeapon : PlayerAttack
 
     public override bool Check()
     {
-        return PlayerInput.Instance.attack.Held;
+        return PlayerInput.Instance.Attack.Held;
     }
 
     public override void Execute()
@@ -66,7 +66,7 @@ public class PlayerAttackWithWeapon : PlayerAttack
 
     public override bool Check()
     {
-        return PlayerInput.Instance.attackWithWeapon.Held;
+        return PlayerInput.Instance.AttackWithWeapon.Held;
     }
 
     public override void Execute()
@@ -103,8 +103,8 @@ public class PlayerWalk : PlayerMove
 
     public override void Execute()
     {
-        float horizontal = PlayerInput.Instance.moveController.Horizontal;
-        float vertical = PlayerInput.Instance.moveController.Vertical;
+        float horizontal = PlayerInput.Instance.MoveController.Horizontal;
+        float vertical = PlayerInput.Instance.MoveController.Vertical;
 
         // 动画控制
         PlayerAnimator.SetFloat(WalkDirectionX, horizontal);
@@ -119,7 +119,7 @@ public class PlayerWalk : PlayerMove
         Vector2 moveDirection = new Vector2(horizontal, vertical) * speedOffset;
     
         // 计算移动量并移动
-        if (PlayerMoveController.velocity < _maxSpeed)
+        if (PlayerMoveController.Velocity < _maxSpeed)
         {
             _movement = Vector2.MoveTowards(_movement, moveDirection*_maxSpeed, Time.fixedDeltaTime * _acceleration );
         }
@@ -142,13 +142,13 @@ public class PlayerTurn : PlayerMove
 
     public override bool Check()
     {
-        return PlayerInput.Instance.moveController.Moving && PlayerMoveController.CanMove;
+        return PlayerInput.Instance.MoveController.Moving && PlayerMoveController.CanMove;
     }
 
     public override void Execute()
     {
-        float vertical = PlayerInput.Instance.moveController.Vertical;
-        float horizontal = Mathf.Abs(vertical) > 0 ? 0f : PlayerInput.Instance.moveController.Horizontal;
+        float vertical = PlayerInput.Instance.MoveController.Vertical;
+        float horizontal = Mathf.Abs(vertical) > 0 ? 0f : PlayerInput.Instance.MoveController.Horizontal;
 
         PlayerAnimator.SetFloat(FaceDirectionX, horizontal);
         PlayerAnimator.SetFloat(FaceDirectionY, vertical);

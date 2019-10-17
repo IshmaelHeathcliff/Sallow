@@ -54,6 +54,8 @@ public class PlayerBehaviourInfo : MonoBehaviour, IDataPersistable
         }
     }
 
+    public string DataTag { get; set; } = "PlayerBehaviourInfoData";
+
     public void LoadData(Data data)
     {
         List<int> intData = ((Data<List<int>, List<float>>) data).Data1;

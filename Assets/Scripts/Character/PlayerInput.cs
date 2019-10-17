@@ -3,11 +3,11 @@
 public class PlayerInput : MonoBehaviour
 {
     public static PlayerInput Instance { get; private set; }
-    public InputAxis moveController = new InputAxis();
-    public InputButton pause = new InputButton(KeyCode.Escape);
-    public InputButton confirm = new InputButton(KeyCode.Return);
-    public InputButton attack = new InputButton(KeyCode.Z);
-    public InputButton attackWithWeapon = new InputButton(KeyCode.X);
+    public InputAxis MoveController { get; } = new InputAxis();
+    public InputButton Pause { get; } = new InputButton(KeyCode.Escape);
+    public InputButton Confirm { get; } = new InputButton(KeyCode.Return);
+    public InputButton Attack { get; } = new InputButton(KeyCode.Z);
+    public InputButton AttackWithWeapon { get; } = new InputButton(KeyCode.X);
 
     void Awake()
     {
@@ -18,11 +18,29 @@ public class PlayerInput : MonoBehaviour
     }
     void Update()
     {
-        moveController.Get();
-        pause.Get();
-        confirm.Get();
-        attack.Get();
-        attackWithWeapon.Get();
+        MoveController.Get();
+        Pause.Get();
+        Confirm.Get();
+        Attack.Get();
+        AttackWithWeapon.Get();
+    }
+
+    public void ReleaseControl()
+    {
+        MoveController.Enabled = false;
+        Pause.Enabled = false;
+        Confirm.Enabled = false;
+        Attack.Enabled = false;
+        AttackWithWeapon.Enabled = false;
+    }
+
+    public void GainControl()
+    {
+        MoveController.Enabled = true;
+        Pause.Enabled = true;
+        Confirm.Enabled = true;
+        Attack.Enabled = true;
+        AttackWithWeapon.Enabled = true;
     }
 }
 

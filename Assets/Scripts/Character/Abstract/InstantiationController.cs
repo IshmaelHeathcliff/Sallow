@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class InstantiationController : MonoBehaviour
 {
-    public GameObject[] toInstantiate;
+    [SerializeField] GameObject[] toInstantiate = new GameObject[1];
     protected Dictionary<string, GameObject> ToInstantiate = new Dictionary<string, GameObject>();
 
     protected virtual void Awake()

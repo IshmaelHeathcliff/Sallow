@@ -4,19 +4,18 @@ using UnityEngine.Events;
 
 public class DamageTrigger : MonoBehaviour
 {
-    public float offset;
-    public Vector2 size;
-    public int damage = 1;
-    public LayerMask damageLayer;
+    [SerializeField] float offset = 0.2f;
+    [SerializeField] Vector2 size = new Vector2(0.1f, 0.1f);
+    [SerializeField] int damage = 1;
+    [SerializeField] LayerMask damageLayer = LayerMask.GetMask();
 
+    public int Damage => damage;
 
-    [Serializable]
-    public class DamageHitEvent : UnityEvent<DamageTrigger, DamageBearer>
+    [Serializable] public class DamageHitEvent : UnityEvent<DamageTrigger, DamageBearer>
     {
     }
 
-    [Serializable]
-    public class DamageNotHitEvent : UnityEvent<DamageTrigger>
+    [Serializable] public class DamageNotHitEvent : UnityEvent<DamageTrigger>
     {
     }
 

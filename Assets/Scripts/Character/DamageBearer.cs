@@ -4,18 +4,18 @@ using UnityEngine.Events;
 
 public class DamageBearer : MonoBehaviour
 {
-    public int maxHealth;
-    public bool invincibleAfterDamage = true;
-    public float invincibleTime = 3f;
-
-    [Serializable]
-    public class DamageEvent : UnityEvent<DamageTrigger, DamageBearer>
+    [SerializeField] int maxHealth = 1;
+    [SerializeField] bool invincibleAfterDamage = true;
+    [SerializeField] float invincibleTime = 3f;
+    public int MaxHealth => maxHealth;
+    public bool InvincibleAfterDamage => invincibleAfterDamage;
+    public float InvincibleTime => invincibleTime;
+    
+    [Serializable] public class DamageEvent : UnityEvent<DamageTrigger, DamageBearer>
     {}
-    [Serializable]
-    public class HealEvent : UnityEvent<int, DamageBearer>
+    [Serializable] public class HealEvent : UnityEvent<int, DamageBearer>
     {}
-    [Serializable]
-    public class HealthChangeEvent : UnityEvent<DamageBearer>
+    [Serializable] public class HealthChangeEvent : UnityEvent<DamageBearer>
     {}
 
     public HealthChangeEvent onHealthChange;
@@ -32,7 +32,7 @@ public class DamageBearer : MonoBehaviour
 
     public void TakeDamage(DamageTrigger damageTrigger)
     {
-        CurrentHealth -= damageTrigger.damage;
+        CurrentHealth -= damageTrigger.Damage;
         onTakeDamage.Invoke(damageTrigger, this);
         onHealthChange.Invoke(this);
         if (CurrentHealth <= 0)
