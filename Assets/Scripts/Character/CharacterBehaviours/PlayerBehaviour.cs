@@ -133,9 +133,6 @@ public class PlayerWalk : PlayerMove
 
 public class PlayerTurn : PlayerMove
 {
-    static readonly int FaceDirectionX = Animator.StringToHash("faceDirectionX");
-    static readonly int FaceDirectionY = Animator.StringToHash("faceDirectionY");
-
     public PlayerTurn(Animator animator, CharacterController2D characterController) : base(animator, characterController)
     {
     }

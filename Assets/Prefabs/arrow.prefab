@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrowSpeed: 6
+  collectable: 0
 --- !u!114 &2023030798002411533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +184,9 @@ MonoBehaviour:
   damageLayer:
     serializedVersion: 2
     m_Bits: 768
+  dataInfo:
+    dataTag: d7722492-49c2-40ba-bbda-efe71eb2f110
+    persistenceType: 0
   onDamageHit:
     m_PersistentCalls:
       m_Calls:

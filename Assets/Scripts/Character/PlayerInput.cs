@@ -27,20 +27,20 @@ public class PlayerInput : MonoBehaviour
 
     public void ReleaseControl()
     {
-        MoveController.Enabled = false;
-        Pause.Enabled = false;
-        Confirm.Enabled = false;
-        Attack.Enabled = false;
-        AttackWithWeapon.Enabled = false;
+        MoveController.ReleaseControl();
+        Pause.ReleaseControl();
+        Confirm.ReleaseControl();
+        Attack.ReleaseControl();
+        AttackWithWeapon.ReleaseControl();
     }
 
     public void GainControl()
     {
-        MoveController.Enabled = true;
-        Pause.Enabled = true;
-        Confirm.Enabled = true;
-        Attack.Enabled = true;
-        AttackWithWeapon.Enabled = true;
+        MoveController.GainControl();
+        Pause.GainControl();
+        Confirm.GainControl();
+        Attack.GainControl();
+        AttackWithWeapon.GainControl();
     }
 }
 
@@ -49,6 +49,10 @@ public abstract class InputComponent
     public bool Enabled { get; set; } = true;
 
     public abstract void Get();
+
+    public abstract void ReleaseControl();
+
+    public abstract void GainControl();
 }
 
 // [Serializable]
@@ -78,6 +82,16 @@ public class InputButton : InputComponent
         Up = Input.GetKeyUp(Key);
         Held = Input.GetKey(Key);
     }
+
+    public override void ReleaseControl()
+    {
+        Enabled = false;
+    }
+
+    public override void GainControl()
+    {
+        Enabled = true;
+    }
 }
 
 // [Serializable]
@@ -98,5 +112,16 @@ public class InputAxis : InputComponent
         Horizontal = Input.GetAxisRaw("Horizontal");
         Vertical = Input.GetAxisRaw("Vertical");
         Moving = Mathf.Abs(Horizontal) + Mathf.Abs(Vertical) > 0;
+    }
+
+    public override void ReleaseControl()
+    {
+        Enabled = false;
+        Moving = false;
+    }
+
+    public override void GainControl()
+    {
+        Enabled = true;
     }
 }

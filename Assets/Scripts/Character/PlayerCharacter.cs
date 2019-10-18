@@ -23,7 +23,7 @@ public class PlayerCharacter : MonoBehaviour, IDataPersistable
     static readonly int FaceDirectionX = Animator.StringToHash("faceDirectionX");
     static readonly int FaceDirectionY = Animator.StringToHash("faceDirectionY");
 
-    Vector2 _faceDirection = new Vector2(0, -1);
+    Vector2 _faceDirection = new Vector2(-1, 0);
 
     public Vector2 FaceDirection
     {
@@ -109,7 +109,6 @@ public class PlayerCharacter : MonoBehaviour, IDataPersistable
     public Data SaveData()
     {
         var data = new Data<Vector2, int> (FaceDirection, ArrowCount);
-        Debug.Log("ArrowCount :" + ArrowCount);
         return data;
     }
 
@@ -118,6 +117,5 @@ public class PlayerCharacter : MonoBehaviour, IDataPersistable
         FaceDirection = ((Data<Vector2, int>) data).Data1;
         onFaceDirectionChanged.Invoke(FaceDirection);
         ArrowCount = ((Data<Vector2, int>) data).Data2;
-        Debug.Log("ArrowCount :" + ArrowCount);
     }
 }

@@ -5,19 +5,23 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] bool testTrigger;
+
     // Start is called before the first frame update
     void Start()
     {
      }
-
-    void OnDestroy()
-    {
-
-    }
+    
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (testTrigger)
+        {
+            PlayerInput.Instance.ReleaseControl();
+            PersistentDataManager.Instance.SaveAllData();
+            PersistentDataManager.Instance.ClearPersistables();
+        }
+
     }
 }

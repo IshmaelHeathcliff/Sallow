@@ -6,6 +6,7 @@ using UnityEngine.Serialization;
 public class Arrow : MonoBehaviour
 {
     [SerializeField] float arrowSpeed = 6f;
+    [SerializeField] bool collectable = false;
     
     Rigidbody2D _rigidbody;
     BoxCollider2D _boxCollider;
@@ -27,11 +28,21 @@ public class Arrow : MonoBehaviour
 
     void Start()
     {
+        if (collectable)
+        {
+            DisableArrow();
+            return;
+        }
+        Fly();
+        SceneLinkedSMB<Arrow>.Initialise(_animator, this);
+    }
+
+    void Fly()
+    {
         _faceDirection = PlayerCharacter.Instance.FaceDirection;
         _rigidbody.velocity = _faceDirection * arrowSpeed;
         _damageTrigger.FaceDirection = _faceDirection;
         _damageTrigger.EnableDamage();
-        SceneLinkedSMB<Arrow>.Initialise(_animator, this);
     }
 
     public void DisableArrow()
