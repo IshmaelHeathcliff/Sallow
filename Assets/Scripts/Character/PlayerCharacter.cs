@@ -71,7 +71,6 @@ public class PlayerCharacter : MonoBehaviour, IDataPersistable
     public void EnableAttack()
     {
         StartCoroutine(AttackProcess());
-
     }
 
     public void DisableAttack()

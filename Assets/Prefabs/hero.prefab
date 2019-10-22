@@ -183,9 +183,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aabea49dca5f5b0448d3dd457f0435a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dataInfo:
+    dataTag: PlayerCharacter
+    persistenceType: 0
   onFaceDirectionChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3053351817309088746}
+        m_MethodName: set_FaceDirection
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3053351817309088747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -201,6 +215,9 @@ MonoBehaviour:
   maxHealth: 10
   invincibleAfterDamage: 1
   invincibleTime: 3
+  dataInfo:
+    dataTag: PlayerDamageBearer
+    persistenceType: 0
   onHealthChange:
     m_PersistentCalls:
       m_Calls: []
@@ -231,6 +248,9 @@ MonoBehaviour:
   damageLayer:
     serializedVersion: 2
     m_Bits: 256
+  dataInfo:
+    dataTag: PlayerDamageTrigger
+    persistenceType: 0
   onDamageHit:
     m_PersistentCalls:
       m_Calls: []
@@ -276,6 +296,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 661ff28da739454781041ea98e1c359f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dataInfo:
+    dataTag: PlayerBehaviourInfo
+    persistenceType: 0
   attackInterval: 0.5
   maxArrowCount: 5
   maxSpeed: 4

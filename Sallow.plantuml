@@ -1,0 +1,48 @@
+@startuml
+interface IDataPersistable{
+DataInfo:DataInfo
+LoadData(Data data):void
+SaveData():Data
+}
+
+class DataInfo{
+DataTag:string
+PersistenceType:DataPersistenceType
+}
+
+enum DataPersistenceType{
+Persist
+DoNotPersist
+}
+
+abstract class Data{
+}
+
+class PersistentDataManager{
++{static}Instance:PersistentDataManager
+-_dataPersistables:List<IDataPersistable>
+-_persistentData:Dictionary<DataTag:string,Data>
++Register(IDataPersistable persistable):void
++Unregister(IDataPersistable persistable):void
++SaveAllData():void
+-SaveData(IDataPersistable persistable):void
++LoadAllData():void
++ClearPersistables():void
+}
+
+class PlayerCharacter{
++FaceDirection:Vector2
++DataInfo:DataInfo
++ArrowCount:int
++SaveData():Data
++LoadData(Data data):void
+}
+
+DataInfo +-- DataPersistenceType
+DataInfo <|-- DataPersistenceType
+IDataPersistable *-- DataInfo
+IDataPersistable <|.. PlayerCharacter
+PersistentDataManager o-- IDataPersistable
+PersistentDataManager <.. Data
+IDataPersistable <.. Data
+@enduml

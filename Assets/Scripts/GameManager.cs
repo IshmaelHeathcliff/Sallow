@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] bool testTrigger;
+    // [SerializeField] bool testTrigger;
 
     // Start is called before the first frame update
     void Start()
@@ -14,14 +14,14 @@ public class GameManager : MonoBehaviour
     
 
     // Update is called once per frame
-    void Update()
-    {
-        if (testTrigger)
-        {
-            PlayerInput.Instance.ReleaseControl();
-            PersistentDataManager.Instance.SaveAllData();
-            PersistentDataManager.Instance.ClearPersistables();
-        }
-
-    }
+//    void Update()
+//    {
+//        if (testTrigger)
+//        {
+//            PlayerInput.Instance.ReleaseControl();
+//            PersistentDataManager.Instance.SaveAllData();
+//            PersistentDataManager.Instance.ClearPersistables();
+//        }
+//
+//    }
 }

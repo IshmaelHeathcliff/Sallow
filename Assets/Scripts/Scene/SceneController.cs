@@ -30,13 +30,13 @@ public class SceneController : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        DontDestroyOnLoad(gameObject);
         _currentScene = SceneManager.GetActiveScene();
         // _restartDestinationTag = TransitionDestination.TransitionDestinationTag.A;
-    }
-
-    void Start()
-    {
-        DontDestroyOnLoad(this);
     }
 
     public void StartTransition(TransitionDeparture transitionDeparture)
@@ -48,12 +48,14 @@ public class SceneController : MonoBehaviour
         Transitioning = true;
         
         PlayerInput.Instance.ReleaseControl();
+        yield return UIManager.Instance.FadeSceneOut(UIManager.FadeType.Sallow);
         PersistentDataManager.Instance.SaveAllData();
         PersistentDataManager.Instance.ClearPersistables();
         yield return SceneManager.LoadSceneAsync(transitionDeparture.NextSceneName);
         PersistentDataManager.Instance.LoadAllData();
         TransitionDestination destination = GetDestination(transitionDeparture.DestinationTag);
         SetDestinationGameObjectPosition(destination);
+        yield return UIManager.Instance.FadeSceneIn();
         PlayerInput.Instance.GainControl();
 
         Transitioning = false;
