@@ -46,7 +46,7 @@ public class PlayerInput : MonoBehaviour
 
 public abstract class InputComponent
 {
-    public bool Enabled { get; set; } = true;
+    protected bool Enabled { get; set; } = true;
 
     public abstract void Get();
 
@@ -58,14 +58,14 @@ public abstract class InputComponent
 // [Serializable]
 public class InputButton : InputComponent
 {
-    public KeyCode Key;
+    KeyCode _key;
     public bool Down { get; set; }
     public bool Up { get; set; }
     public bool Held { get; set; }
 
     public InputButton(KeyCode key)
     {
-        Key = key;
+        _key = key;
     }
 
     public override void Get()
@@ -78,9 +78,9 @@ public class InputButton : InputComponent
             return;
         }
         
-        Down = Input.GetKeyDown(Key);
-        Up = Input.GetKeyUp(Key);
-        Held = Input.GetKey(Key);
+        Down = Input.GetKeyDown(_key);
+        Up = Input.GetKeyUp(_key);
+        Held = Input.GetKey(_key);
     }
 
     public override void ReleaseControl()

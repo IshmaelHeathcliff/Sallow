@@ -4,16 +4,16 @@ public class SceneLinkedSMB<TMonoBehaviour> : StateMachineBehaviour
 {
    protected TMonoBehaviour _monoBehaviour;
 
-   public static void Initialise(Animator animator, TMonoBehaviour monoBehaviour)
+   public static void Initialize(Animator animator, TMonoBehaviour monoBehaviour)
    {
           var sceneLinkedSMBList = animator.GetBehaviours<SceneLinkedSMB<TMonoBehaviour>>();
           foreach (SceneLinkedSMB<TMonoBehaviour> sceneLinkedSMB in sceneLinkedSMBList)
           {
-                 sceneLinkedSMB.InternalInitialise(monoBehaviour);
+                 sceneLinkedSMB.InternalInitialize(monoBehaviour);
           }
    }
 
-   public void InternalInitialise(TMonoBehaviour monoBehaviour)
+   void InternalInitialize(TMonoBehaviour monoBehaviour)
    {
           _monoBehaviour = monoBehaviour;
    }

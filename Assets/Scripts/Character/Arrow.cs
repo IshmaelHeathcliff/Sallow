@@ -34,7 +34,7 @@ public class Arrow : MonoBehaviour
             return;
         }
         Fly();
-        SceneLinkedSMB<Arrow>.Initialise(_animator, this);
+        SceneLinkedSMB<Arrow>.Initialize(_animator, this);
     }
 
     void Fly()

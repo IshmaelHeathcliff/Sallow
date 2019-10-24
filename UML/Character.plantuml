@@ -1,0 +1,295 @@
+@startuml
+abstract class CharacterBehaviour{
++Check():bool
++SetParameters():void
++Execute():void
+}
+
+abstract class CollectableItem<<MonoBehaviour>>{
+#CollectorTags:List<string>
+#Collider:Collider2D
+#IsCollectable:bool
++CollectedEvent
++onCollected:CollectedEvent
++AddCollectorTag(string collectorTag):void
++RemoveCollectorTag(string collectorTag):void
++EnableCollectable():void
++DisableCollectable():void
+#Awake():void
+#OnDisable():void
+#OnTriggerStay2D(Collider2D other):void
+}
+
+abstract class InstantiationController<<MonoBehaviour>>{
+-<<SerializeField>>toInstantiate:GameObject[]
+#ToInstantiate:Dictionary<string,GameObject>
+#Awake():void
++InstantiateGameObject(string objectName):void
++AddToInstantiate(GameObject instance):void
+}
+
+class SceneLinkedSMB<TMonoBehaviour>{
+#_monoBehaviour:TMonoBehaviour
++{Static}Initialize(Animator animator, TMonoBehaviour monoBehaviour):void
+-InternalInitialize(TMonoBehaviour monoBehaviour):void
+}
+
+class PlayerBehaviour{
+#PlayerAnimator:Animator
+#PlayerBehaviour(Animator animator)
+}
+
+class PlayerAttack{
+#NextAttackTime:float
+#AttackInterval:float
+#PlayerAttack(Animator animator)
++SetParameters():void
+}
+
+class PlayerMove{
+#PlayerMoveController:CharacterController2D
+#PlayerMove(Animator animator, CharacterController2D characterController2D)
+}
+
+class PlayerEmptyBehaviour{
++PlayerEmptyBehaviour(Animator animator)
++Check():bool
++Execute():void
+}
+
+class PlayerCharacter<<MonoBehaviour>>{
++{Static}Instance:PlayerCharacter
+-_animator:Animator
+-_attackDamageTrigger:DamageTrigger
+-_characterController:CharacterController2D
+-_behaviourController:PlayerBehaviourController
+-_instantiationController:PlayerInstantiationController
++dataInfo:DataInfo
++onFaceDirectionChanged:ParameterChangedEvent
++FaceDirection:Vector2
++DataInfo:DataInfo
++ArrowCount:int
+-Awake():void
+-Start():void
++EnableAttack():void
++DisableAttack():void
++EnableMove():void
++DisableMove():void
++Instantiate(string objectName):void
++CollectArrow():void
+-AttackProcess():IEnumerator
++SaveData():Data
++LoadData(Data data):void
+}
+
+class PlayerInput<<MonoBehaviour>>{
++{Static}Instance:PlayerInput
++MoveController:InputAxis
++Pause:InputButton
++Confirm:InputButton
++Attack:InputButton
++AttackWithWeapon:InputButton
+-Awake():void
+-Update():void
++ReleaseControl():void
++GainControl():void
+}
+
+abstract class InputComponent{
+#Enabled:bool
++Get():void
++ReleaseControl():void
++GainControl():void
+}
+
+class InputButton{
+-_key:KeyCode
++Down:bool
++Up:bool
++Held:bool
++InputButton(KeyCode key)
++Get():void
++ReleaseControl():void
++GainControl():void
+}
+
+class InputAxis{
++Horizontal:float
++Vertical:float
++Moving:bool
++Get():void
++ReleaseControl():void
++GainControl():void
+} 
+
+class PlayerInstantiationController<<MonoBehaviour>>{
+- <<SerializeField>>arrowOffset:float
++InstantiateGameObject(string objectName):void
+-InstantiateArrow():void
+}
+
+class PlayerBehaviourController<<MonoBehaviour>>{
+-_animator:Animator
+-_characterController:CharacterController2D
+-PlayerBehaviourDictionary:Dictionary<PlayerBehaviours,PlayerBehaviour>
+-Awake():void
+-FixedUpdate():void
+-AddBehaviours():void
+-AddBehaviour(PlayerBehaviours behaviour):void
+-ExecuteBehaviours():void
+}
+
+enum PlayerBehaviours{
+Attack
+AttackWithWeapon
+Walk
+Turn
+}
+
+class CharacterController2D<<MonoBehaviour>>{
++Velocity:float
+-_rigidbody:Rigidbody2D
+-_movement:Vector2
++CanMove:bool
+-Awake():void
++EnableMove():void
++DisableMove():void
++Move(Vector2 movement):void
+-Update():void
+}
+
+class DamageTrigger<<MonoBehaviour>>{
+-<<SerializeField>>offset:float
+-<<SerializeField>>size:Vector2
+-<<SerializeField>>damage:int
+-<<SerializeField>>damageLayer:LayerMask
+-<<SerializeField>>dataInfo:DataInfo
++Damage:int
++DataInfo:DataInfo
++onDamageHit:DamageHitEvent
++onDamageNotHit:DamageNotHitEvent
+-_canDamage:bool
+-_attackOverlapResults:Collider2D[]
++FaceDirection:Vector2
+-Start():void
++EnableDamage():void
++DisableDamage():void
+-FixedUpdate():void
++SaveData():Data
++LoadData(Data data):void
+}
+
+class DamageBearer<<MonoBehaviour>>{
+-<<SerializeField>>maxHealth:int
+-<<SerializeField>>invincibleAfterDamage:bool
+-<<SerializeField>>invincibleTime:float
+-<<SerializeField>>dataInfo:DataInfo
++MaxHealth:int
++InvincibleAfterDamage:bool
++InvincibleTime:float
++CurrentHealth:int
++DataInfo:DataInfo
++onHealthChange:HealthChangeEvent
++onTakeDamage:DamageEvent
++onDie:DamageEvent
++onHeal:HealEvent
+-Awake():void
+-Start():void
++TakeDamage(DamageTrigger damageTrigger):void
++TakeHealing(int healing):void
++SaveData():Data
++LoadData(Data data):void
+}
+
+class PlayerBehaviourInfo<<MonoBehaviour>>{
++{Static}Instance:PlayerBehaviourInfo
+-<<SerializeField>>dataInfo:DataInfo
+-<<SerializeField>>attackInterval:float
+-<<SerializeField>>maxArrowCount:int
+-<<SerializeField>>maxSpeed:float
+-<<SerializeField>>acceleration:float
++DataInfo:DataInfo
++MaxArrowCount:int
++AttackInterval:float
++MaxSpeed:float
++Acceleration:float
+-Awake():void
+-Start():void
++LoadData(Data data):void
++SaveData():Data
+}
+
+class Arrow<<MonoBehaviour>>{
+-<<SerializeField>>arrowSpeed:float
+-<<SerializeField>>collectable:bool
+-_rigidbody:Rigidbody2D
+-_boxCollider:BoxCollider2D
+-_damageTrigger:DamageTrigger
+-_animator:Animator
+-_faceDirection:Vector2
+-_collectableArrow:CollectableArrow
++ArrowBreak:int
+-Awake():void
+-Start():void
+-Fly():void
++DisableArrow():void
++DestroyArrow():void
++Break():void
+}
+
+class CollectableArrow<<MonoBehaviour>>{
+-Awake():void
+-OnTriggerStay2D(Collider2D other):void
+-OnDisable():void
+}
+
+interface IDataPersistable
+
+CollectableItem <|-- CollectableArrow
+Arrow o-- CollectableArrow
+
+
+PlayerInput *-- InputButton
+PlayerInput *-- InputAxis
+InputComponent <|-- InputButton
+InputComponent <|-- InputAxis
+
+InstantiationController <|-- PlayerInstantiationController
+
+PlayerBehaviourController +-- PlayerBehaviours
+
+PlayerBehaviour <.. PlayerBehaviourController
+
+StateMachineBehaviour <|-- SceneLinkedSMB
+
+CharacterController2D <.. PlayerMove
+
+PlayerBehaviourInfo <.. PlayerAttack
+
+SceneLinkedSMB <|-- AttackSMB 
+SceneLinkedSMB <|-- ArrowBreakSMB
+
+DamageBearer +-- DamageEvent
+DamageBearer +-- HealEvent
+DamageBearer +-- HealthChangeEvent
+CollectableItem +-- CollectedEvent
+PlayerCharacter +-- ParameterChangedEvent
+DamageTrigger +-- DamageHitEvent
+DamageTrigger +-- DamageNotHitEvent
+
+IDataPersistable <|-- PlayerCharacter
+IDataPersistable <|-- DamageTrigger
+IDataPersistable <|-- PlayerBehaviourInfo
+IDataPersistable <|-- DamageBearer
+
+PlayerCharacter o-- DamageTrigger
+PlayerCharacter o-- CharacterController2D
+PlayerCharacter o-- PlayerBehaviourController
+PlayerCharacter o-- PlayerInstantiationController
+
+CharacterBehaviour <|-- PlayerBehaviour
+PlayerBehaviour <|-- PlayerAttack
+PlayerBehaviour <|-- PlayerMove
+PlayerBehaviour <|-- PlayerEmptyBehaviour
+
+@enduml

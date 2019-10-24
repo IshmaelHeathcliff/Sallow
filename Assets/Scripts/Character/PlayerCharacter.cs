@@ -65,7 +65,7 @@ public class PlayerCharacter : MonoBehaviour, IDataPersistable
     void Start()
     {
         
-        SceneLinkedSMB<PlayerCharacter>.Initialise(_animator, this);
+        SceneLinkedSMB<PlayerCharacter>.Initialize(_animator, this);
     }
 
     public void EnableAttack()
