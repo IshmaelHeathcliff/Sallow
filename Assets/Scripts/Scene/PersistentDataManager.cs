@@ -10,7 +10,7 @@ public class PersistentDataManager
     public static PersistentDataManager Instance => _instance ?? (_instance = new PersistentDataManager());
 
     PersistentDataManager(){}
-
+ 
     List<IDataPersistable> _dataPersistables = new List<IDataPersistable>();
 
     Dictionary<string, Data> _persistentData = new Dictionary<string, Data>();
